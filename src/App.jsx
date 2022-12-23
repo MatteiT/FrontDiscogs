@@ -39,8 +39,8 @@ export default function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/search" element={<Search />} />
             </Route>
+
             {/* Private Route */}
-            
             
             <Route path="/collections">
               <Route index element={< CollectionPage />} />
