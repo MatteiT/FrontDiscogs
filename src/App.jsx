@@ -24,7 +24,6 @@ export default function App() {
 
 
   return (
-    
 <ThemeProvider theme={theme}>
   <CssBaseline />
     <Router>
@@ -32,6 +31,7 @@ export default function App() {
       <Banner />
       <Nav />
         <Routes>
+          
           {/* Public Route */}
             < Route path="/" >
               <Route index path="/" element={<Home />} />

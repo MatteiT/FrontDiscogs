@@ -12,15 +12,34 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMode} from '../features/app/themeSlice';
 import LogOut from '../features/auth/LogOut';
+import { Block } from '@mui/icons-material';
 
 
 const Nav = () => {
   const dispatch = useDispatch();
   const mode = useSelector((state) => state.theme.mode);
+  const user = useSelector((state) => state.auth.user);
+
   return (
     <>
           <AppBar position="static">
             <Toolbar>
+              <Grid container spacing={2} alignContent="center" justifyContent="center" direction="row">
+              {!user ? ( 
+                <Box 
+                variant='outline'
+                sx={{ flexGrow: 1 }}
+                style={{
+                  // make an infinite animation that fades in and out
+                  animation: 'fade-in-out 1s ease-in-out infinite alternate',
+                  color: mode === 'dark' ? 'white' : 'black',
+                }}
+                >
+                     You have to be logged in to use this app.
+                   </Box>
+
+              ) : (
+            <Grid container spacing={2} alignContent="center" justifyContent="center" direction="row">
               <Box variant='outline'sx={{ flexGrow: 1 }}>
                 <NavLink to="/">Home</NavLink>
               </Box>
@@ -47,6 +66,9 @@ const Nav = () => {
               />
               </Grid>
               </Box>
+            </Grid>
+              )}
+              </Grid>
             </Toolbar>
           </AppBar>   
       </>

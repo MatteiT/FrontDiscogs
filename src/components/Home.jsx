@@ -9,13 +9,32 @@ const Home = () => {
   const navigate = useNavigate()
 
   return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        width: '100%',
+        flexDirection: 'column',
+      }}
+    >
 
-    <Box border={1} borderColor="primary.main" borderRadius={2} padding={2} margin={2}>
-      <h1>Home</h1>
-      <Button variant="contained" onClick={() => navigate('/login')}>Login</Button>
-      <Button variant="contained" onClick={() => navigate('/register')}>Register</Button>
+      <Stack spacing={2} direction="row">
+        <Button
+          variant="contained"
+          onClick={() => navigate('/login')}
+        >
+          Login
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => navigate('/register')}
+        >
+          Register
+        </Button>
+      </Stack>
     </Box>
-    
   )
 }
 
