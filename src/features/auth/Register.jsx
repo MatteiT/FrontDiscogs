@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, TextField, Stack, Alert } from '@mui/material'
+import { Button, TextField, Stack, Alert } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useAddUserMutation } from '../users/UserSlice'
 
@@ -27,14 +27,18 @@ const Register = () => {
     if (isLoading) return 'Loading...'
 
   return (
-    <>
-        <Box border={1} borderColor="primary.main" borderRadius={2} padding={2} margin={2}>
+
+    <form onSubmit={handleRegister}>
+        <Stack  
+            spacing={3}
+            direction="column" 
+            alignItems="center" 
+            justifyContent="center" 
+            p={2} 
+            m={2}>
             <h1>Register</h1>
-            <form onSubmit={handleRegister}>
                 <Alert severity="info">All the fiels are required ! </Alert>
                 {error && <Alert severity="error">{error.message}</Alert>}
-
-                <Stack spacing={2}>
                     <TextField
                         required
                         id="username"
@@ -53,12 +57,10 @@ const Register = () => {
                         label="Email"
                         variant="outlined"
                     />
-                    <Button variant="contained" type="submit">Register</Button>
-                </Stack>
-            </form>
-        </Box>
-        <Button variant="contained"  onClick={() => navigate('/login')}>Login Instead</Button>
-    </>
+                <Button variant="contained" type="submit">Register</Button>
+                <Button variant="contained" color='warning'  onClick={() => navigate('/login')}>Login Instead</Button>
+        </Stack>
+    </form>
   )
 }
 

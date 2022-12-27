@@ -1,49 +1,45 @@
 import React from 'react'
-import { Box, Button, Grid } from '@mui/material'
-import { useDeleteCollectionMutation, useGetAllCollectionsQuery, useGetCollectionQuery } from './CollectionSlice'
+import { Box, Button} from '@mui/material'
+import { useGetAllCollectionsQuery, useDeleteCollectionMutation } from './CollectionSlice'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 
 
 const CollectionList = ( ) => {
-    const { data, isLoading, error } = useGetAllCollectionsQuery()
     const [deleteCollection] = useDeleteCollectionMutation()
+    const { userId } = useSelector(state => state.auth)
+    const { data = [] } = useGetAllCollectionsQuery(userId)
+    
+
     const navigate = useNavigate()
 
-    const handleDelete = async (id) => {
-        try {
-            await deleteCollection({id: id})
-            navigate(`/collections/${id}`)
-        } catch (err) {
-            console.log(err)
+    const handleDelete = (collection) => {
+        const { _id } = collection
+        const confirmDelete = window.confirm('Are you sure you want to delete this collection?')
+        if (confirmDelete, _id){
+            deleteCollection(_id)
+            navigate('/collections')
         }
     }
 
-
-    if (isLoading) return 'Loading...'
-    if (error) return `An error has occurred: ${error.message}`
-
-
-    return (
-    <>
-        <Box border={1} borderColor="primary.main" borderRadius={2} padding={2} margin={2}>
-            <h1>Collection List</h1>
-            <Grid container spacing={2} alignContent="center" justifyContent="center" direction="column">
-                {data.map(collection => (
-                    <Grid container spacing={2} alignContent="center" justifyContent="center" direction="row" key={collection._id}  >
-                        <Box  border={1} borderColor="primary.main" borderRadius={2} padding={2} margin={2} >
+    return (< > 
+                {data.map((collection) => (
+                    <Box key={collection._id}>
+                        < Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', }} >
                             <h2>{collection.title}</h2>
                             <p>{collection.text}</p>
-                            <Button variant="contained" onClick={() =>  navigate(`/collections/${collection._id}`)}>View Collection</Button>
-                            <Button variant="contained" onClick={() => handleDelete(collection._id)}>Delete Collection</Button>
+                        < Button variant="contained" onClick={() => navigate(`/collections/${collection._id}`)}>
+                            {collection.title}
+                        </Button>
+                        <Button variant="contained" onClick={() => handleDelete(collection)}>
+                            Delete
+                        </Button>
                         </Box>
-                    </Grid>
+                    </Box>
                 ))}
-                </Grid>
-            </Box>
-    </>
+            </>
     )
 }
-
 
 export default CollectionList

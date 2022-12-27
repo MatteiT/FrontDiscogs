@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { Button, TextField, FormControl, Grid } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import { useAddCollectionMutation } from './collectionSlice'
+import { useAddCollectionMutation } from './CollectionSlice'
 import { useSelector } from 'react-redux'
 
 const NewCollectionForm = () => {
@@ -41,7 +41,7 @@ const NewCollectionForm = () => {
 
   return (
 <>
-      <Grid container spacing={2} alignContent="center" justifyContent="center" direction="row">
+      <Grid container spacing={2} justifyContent="center">
           <FormControl component="fieldset">
             <form onSubmit={handleSubmit}>
               <TextField

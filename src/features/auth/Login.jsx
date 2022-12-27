@@ -48,21 +48,22 @@ const Login = () => {
     } 
     }
 
-    
     useEffect(() => {
         inputRef.current.focus()
         error && setError(error)
     }, [username, password])
 
-
     if (isLoading) return 'Loading...'
     if (error) return `An error has occurred: ${error.message}`
-
     return (
-        <>
-        <Box border={1} borderColor="primary.main" borderRadius={2} padding={2} margin={2}>
-                <form onSubmit={handleSubmit}>
-                    <Stack spacing={2}>
+            <form onSubmit={handleSubmit}>
+                <Stack  
+                    spacing={3}
+                    direction="column" 
+                    alignItems="center" 
+                    justifyContent="center" 
+                    p={2} 
+                    m={2}>
                     <h1>Login</h1>
                     <TextField
                         id="outlined-basic"
@@ -99,17 +100,11 @@ const Login = () => {
                     >
                         Login
                     </Button>
-                    </Stack>
-                </form>
-            </Box>
-            <Button variant="contained"  onClick={() => navigate('/register')}>Register Instead</Button>
-
-        </>
-
+                
+                    <Button variant="contained" color='warning' onClick={() => navigate('/register')}>Register Instead</Button>
+                </Stack> 
+            </form>
     )
 }
-
-
-
 
 export default Login

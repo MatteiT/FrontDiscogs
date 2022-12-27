@@ -6,6 +6,7 @@ import modalreducer from './app/ModalSlice'
 import auth from './auth/authSlice'
 import { apiSlice } from './ApiSlice'
 
+
 const ReduxStore = configureStore({
     reducer: {
         app: appReducer,

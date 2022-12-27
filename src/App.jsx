@@ -37,17 +37,17 @@ export default function App() {
               <Route index path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/search" element={<Search />} />
             </Route>
 
             {/* Private Route */}
+
+            <Route path="/search" element={<IsAuth><Search /></IsAuth>} />
             
             <Route path="/collections">
-              <Route index element={< CollectionPage />} />
-              <Route path=":id" element={<CollectionList />} />
-              <Route path="new" element={<NewCollectionForm />} />
+              <Route index element={<IsAuth><CollectionList /></IsAuth>} />
+              <Route path=":id" element={<IsAuth><CollectionPage /></IsAuth>} />
+              <Route path="new" element={<IsAuth><NewCollectionForm /></IsAuth>} />
             </Route>
-            
 
             {/* Utils Route  */}
             <Route path="/about" element={<About />} />
