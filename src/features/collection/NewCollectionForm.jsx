@@ -17,7 +17,7 @@ const NewCollectionForm = () => {
 
     const title = e.target.collectionName.value
     if (title === ''){
-      setMessage({type: 'error', text: 'Please enter a title for your collection'})
+      setMessage ('Collection name is required')
       return;
     }
     setIsLoading(true)
@@ -28,15 +28,14 @@ const NewCollectionForm = () => {
           text: e.target.collectionDescription.value
       }
       const {data} = await addCollection( collection)
-
-      if (data.status === 200) {
-        setMessage({type: 'success', text: data.message})
+    if (data.status === 200) {
+        setMessage('Collection added successfully')
+        navigate('/collections')
       } else {
-        setError({type: 'error', text: data.message})
+        setError(data.message)
       }
-      navigate('/collections')
     } catch (err) {
-      setMessage(err.message)
+      setError('Error adding collection')
     } finally {
       setIsLoading(false)
     }
@@ -72,8 +71,11 @@ const NewCollectionForm = () => {
             fullWidth
             margin="normal"
           />
-          {message && <Alert severity='success'>{message.text}</Alert>}
-          {error && <Alert severity='error'>{error.text}</Alert>}
+          {(message || error) && (
+            <Alert severity={message ? "success" : "error"}>
+              {message || error}
+            </Alert>
+          )}
           <Button
             variant="contained"
             type="submit"

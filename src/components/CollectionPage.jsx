@@ -3,9 +3,11 @@ import NewCollectionForm from '../features/collection/NewCollectionForm'
 import CollectionList from '../features/collection/CollectionList'
 import { Stack } from '@mui/system'
 import { Box, Grid } from '@mui/material'
+import { useEffect } from 'react'
 
 
 const Collection = () => {
+
   return (
     <>
       < Stack direction="column" 

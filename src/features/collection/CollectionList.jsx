@@ -6,8 +6,8 @@ import { useSelector } from 'react-redux'
 
 const CollectionList = ( ) => {
     const { userId } = useSelector(state => state.auth)
-    const { data, isLoading, isError } = useGetAllCollectionsQuery(userId)
-    const [deleteCollection, { isLoading: isDeleteLoading, isError: isDeleteError }] = useDeleteCollectionMutation()
+    const { data, refetch} = useGetAllCollectionsQuery(userId)
+    const [deleteCollection] = useDeleteCollectionMutation()
     const navigate = useNavigate()
     const [modalOpen, setModalOpen] = useState(false)
     const [collectionToDelete, setCollectionToDelete] = useState(null)
@@ -22,27 +22,27 @@ const CollectionList = ( ) => {
     }
 
     const handleConfirmDelete = async () => {
-        setModalOpen(false)
         try {
-            await deleteCollection( collectionToDelete._id, userId );
+            await deleteCollection( collectionToDelete._id );
             setSuccessMessage('Collection deleted successfully')
+            setCollectionToDelete(null)
+            refetch()
         } catch (err) {
             setErrorMessage('Error deleting collection')
         }
-        setCollectionToDelete(null)
+        navigate('/collections')
+        setModalOpen(false)
     }
 
     useEffect(() => {
-        if (isDeleteError) {
-            setErrorMessage('Error deleting collection')
-        }
-        if (successMessage) {
+
+        if (successMessage || errorMessage) {
             setTimeout(() => {
                 setSuccessMessage(null)
-                navigate('/collections')
+                setErrorMessage(null)
             }, 2000)
         }
-    }, [isDeleteError, successMessage])
+    }, [successMessage, errorMessage ])
     
 return (
     <>  
@@ -50,7 +50,6 @@ return (
             <h1>My Collections</h1>
             {successMessage && <Alert severity="success">{successMessage}</Alert> }
             {errorMessage && <Alert severity="error">{errorMessage}</Alert> }
-            {isDeleteError && <h2>Error Occured</h2>}
         </Box>
         { filteredData ? (
             filteredData.length > 0 ? (
@@ -60,9 +59,7 @@ return (
                         
                             <h2>{collection.title}</h2>
                             <p>{collection.text}</p>
-                        < Button variant="contained" onClick={() => navigate(`/collections/${collection._id}`)}>
-                            {collection.title}
-                        </Button>
+                            <Button variant="contained" onClick={() => navigate(`/collections/${collection._id}`)}> View </Button>
                         <Button variant="contained"  onClick={() => handleDelete(collection)}>
                             Delete
                         </Button>
