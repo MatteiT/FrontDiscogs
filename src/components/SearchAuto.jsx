@@ -2,20 +2,30 @@ import React, { useState } from "react";
 import { Box, Grid, Tab, Tabs, TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedTab } from "../features/app/AppSlice";
+import { setSearch, setSelectedTab } from "../features/app/AppSlice";
 
-
-
-const SearchAuto = ({onChange}) => {
-    const { albums } = useSelector((state) => state.app);
+const SearchAuto = () => {
+    const { albums, selectedTab, search } = useSelector((state) => state.app);
     const [value, setValue] = useState(0);
     const dispatch = useDispatch();
-
+    
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        if (newValue !== 'all') {
         dispatch(setSelectedTab(newValue));
+        }else{
+            dispatch(setSelectedTab('all'));
+        }
+    };
+    
+    const handleSearch = (e) => {
+        const value  = e.target.value;
+        dispatch(setSearch(value));
     };
 
+    
+    const filteredItems = selectedTab === 'all' ? albums : albums.filter(album => album.type === selectedTab);
+    
     return (
         <>
             <Box sx={{ flexGrow: 1 }}>
@@ -27,15 +37,14 @@ const SearchAuto = ({onChange}) => {
                         clearOnBlur
                         handleHomeEndKeys
                         autoHighlight
-                        options={albums.map((option) => option.title)}
+                        options={albums.map((album) => album.title)}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
                                 label="Search input"
                                 autoFocus={true}
-                                placeholder="Search for an album or artist here ..."
                                 variant="outlined"
-                                onChange={onChange}
+                                onChange={handleSearch}
                             />
                         )}
                     />
@@ -45,13 +54,11 @@ const SearchAuto = ({onChange}) => {
                         <Tab label="Album" name="album" />
                         <Tab label="Genre"  name="genre" />
                     </Tabs>
-
                 </Grid>
             </Box>
         </>
     );
 }
 
-// const url=`https://api.discogs.com/database/search?q=${search}&token=qALItICfHYUDyaIegejpMxJlRDjVmjxBxfkwgbCi&page=${page}`
 
 export default SearchAuto;

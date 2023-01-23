@@ -27,14 +27,14 @@ function ClickModal() {
                 flexDirection='column' 
                 alignItems='center' 
                 >
-                  <Typography variant="h1" component="h2" label='Artiste'>
+                  <Typography variant="h8" component="h2" label='Artiste'>
                     {modal && modal.title}
                   </Typography>
-                  <Typography variant="h2" color="text.secondary">
+                  <Typography variant="h6" color="text.secondary">
                   <h1>  {modal && modal.artists}</h1>
                   </Typography>
                   <Box component='img' src={modal && modal.cover_image} alt={modal && modal.title}   />
-                  <Typography variant="h2" color="text.secondary">
+                  <Typography variant="h6" color="text.secondary">
                     {modal && modal.year}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
@@ -42,7 +42,7 @@ function ClickModal() {
                           <Chip key={index} size="small" label={label} />
                       ))}
                   </Typography>
-                  <Typography variant="h2" color="text.secondary">
+                  <Typography variant="h6" color="text.secondary">
                     {modal && modal.country}
                   </Typography>
                   <Box display='flex' justifyContent='center' alignItems='center' flexDirection='row'>

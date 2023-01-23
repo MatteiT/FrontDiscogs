@@ -1,7 +1,6 @@
 import {fetchUserById} from './usersSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import { Navigate } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 export const User = ({match}) => {
     const { userId } = match.params;

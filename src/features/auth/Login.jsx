@@ -1,6 +1,6 @@
 import React from 'react'
-import { useState, useRef,useEffect } from 'react'
-import { Button, TextField, FormControl, Grid, Alert, Stack, Box } from '@mui/material'
+import { useState, useRef } from 'react'
+import { Button, TextField, Grid, Alert, Stack} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import {useLoginMutation} from './authApiSlice'
 import { setCredentials, setUserId } from './authSlice'
@@ -16,7 +16,6 @@ const Login = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const inputRef = useRef()
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -26,37 +25,22 @@ const Login = () => {
             email: e.target.email.value
         }
         try {
-        const {accessToken, id} = await login(user).unwrap()// unwrap() is a method that returns the data from the promise
-        dispatch(setCredentials(accessToken ))
-        dispatch(setUserId(id)) 
+            const {data} = await login(user)
+            dispatch(setCredentials(data.accessToken))
+            dispatch(setUserId(data.id))
+            navigate('/collections')
+        } catch (err) {
+            setError(err.message)
+        }
+        setEmail('')
         setPassword('')
         setUsername('')
-        setEmail('')
-        navigate('/collections')
-        } catch (err) {
-            if(err.status === 404){
-                setError('Invalid username or password')
-            } else if (err.status === 500) {
-                setError('Server error')
-            } else if (err.status === 400) {
-                setError('Bad request')
-            }else if (err.status === 401) {
-                setError('Unauthorized')
-            } else {
-                setError('Something went wrong')
-            }
     } 
-    }
 
-    useEffect(() => {
-        inputRef.current.focus()
-        error && setError(error)
-    }, [username, password])
-
-    if (isLoading) return 'Loading...'
-    if (error) return `An error has occurred: ${error.message}`
     return (
+        <Grid container justifyContent="center" alignItems="center">
             <form onSubmit={handleSubmit}>
+                { error ? <Alert severity="error">{error}</Alert> : null }
                 <Stack  
                     spacing={3}
                     direction="column" 
@@ -72,6 +56,7 @@ const Login = () => {
                         name="username"
                         required
                         value={username}
+                        autoFocus={true}
                         onChange={(e) => setUsername(e.target.value)}
                         ref={inputRef}
                     />
@@ -89,6 +74,7 @@ const Login = () => {
                         label="Password"
                         variant="outlined"
                         name="password"
+                        type="password"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -100,10 +86,11 @@ const Login = () => {
                     >
                         Login
                     </Button>
-                
                     <Button variant="contained" color='warning' onClick={() => navigate('/register')}>Register Instead</Button>
                 </Stack> 
             </form>
+        </Grid>
+        
     )
 }
 

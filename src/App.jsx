@@ -8,14 +8,14 @@ import About from './utils/About';
 import Error from './utils/Error';
 import Register from './features/auth/Register';
 import CollectionPage from './components/CollectionPage';
-import { Box, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import { themeSettings } from './theme/theme';
 import Login from './features/auth/Login';
-import CollectionList from './features/collection/CollectionList';
 import NewCollectionForm from './features/collection/NewCollectionForm';
+import InsideCollection from './features/collection/InsideCollection';
 import IsAuth from './features/auth/IsAuth';
 
 export default function App() {
@@ -31,21 +31,18 @@ export default function App() {
       <Banner />
       <Nav />
         <Routes>
-          
           {/* Public Route */}
             < Route path="/" >
               <Route index path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Route>
-
             {/* Private Route */}
-
             <Route path="/search" element={<IsAuth><Search /></IsAuth>} />
             
             <Route path="/collections">
-              <Route index element={<IsAuth><CollectionList /></IsAuth>} />
-              <Route path=":id" element={<IsAuth><CollectionPage /></IsAuth>} />
+              <Route index element={<IsAuth><CollectionPage /></IsAuth>} />
+              <Route path=":id" element={<IsAuth><InsideCollection /></IsAuth>} />
               <Route path="new" element={<IsAuth><NewCollectionForm /></IsAuth>} />
             </Route>
 
@@ -53,7 +50,6 @@ export default function App() {
             <Route path="/about" element={<About />} />
             <Route path="*" element={<Error />} />
         </Routes>
-        {/* Footer */}
       </Router>
 </ThemeProvider>
   );

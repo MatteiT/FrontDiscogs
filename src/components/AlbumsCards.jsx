@@ -3,49 +3,52 @@ import { Card, CardMedia, Typography, Box, Chip, Button, Grid } from '@mui/mater
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../features/app/ModalSlice';
 import ClickModal from './ClickModal';
-import {selectCollectionById, useGetAllCollectionsQuery, useUpdateCollectionMutation,useGetCollectionQuery } from '../features/collection/CollectionSlice';
-import { useNavigate } from 'react-router-dom';
-import Select from '@mui/material/Select';
+import { useGetAllCollectionsQuery,
+        useUpdateCollectionMutation
+    } from '../features/collection/CollectionSlice';
+import { Select } from '@mui/material';
+
 
 
 export const AlbumsCards = () => {
-    const urlDiscogs = 'https://www.discogs.com';
-    const {albums}  = useSelector((state) => state.app);
+  const urlDiscogs = 'https://www.discogs.com';
+
+  const {albums}  = useSelector((state) => state.app);
     const dispatch = useDispatch();
     const handleModal = (album) => dispatch(setModal(album));
-
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
-    const [collectionId, setCollectionId] = useState('');
     const [updateCollection] = useUpdateCollectionMutation();
-    const {data: collection} = useGetCollectionQuery(collectionId);
     const {data: collections} = useGetAllCollectionsQuery();
     const [selectedCollection, setSelectedCollection] = useState('');
-
+    const [success, setSuccess] = useState(null);
+    const [error, setError] = useState(null);
+    const {userId} = useSelector(state => state.auth);
     
-    
-    const handleSelect = (e) => {
-        setSelectedCollection(e.target.value);
-        console.log(selectedCollection);
+    const handleAddToCollection = async (album, collectionId) => {
+      setIsLoading(true);
+      setError(null);
+      setSuccess(null)
+try {
+    const { data: collections } = useGetAllCollectionsQuery();
+    const collection = collections.find((collection) => collection._id === collectionId);
+    if (!collection) {
+        setError("Collection not found");
+        return;
     }
-
-    const handleAddToCollection = (album) => {
-        const collection = collections.find((collection) => collection.id === selectedCollection);
-        console.log(collection);
-        const Wanted = collection.wanted;
-        Wanted.push(album);
-        const newCollection = {
-            ...collection,
-            wanted: Wanted
-        }
-        updateCollection(newCollection);
-        navigate(`/collections/${collection.id}`);
+    if (collection.wanted.find((item) => item.id === album.id)) {
+        setError("This Album is already in this collection.");
+        return;
     }
-
-
-      if (isLoading) return 'Loading...';
-      if (error) return `An error has occurred: ${error.message}`;
+    const newWanted = collection.wanted ? [...collection.wanted, album] : [album];
+    const updatedCollection = { ...collection, wanted: newWanted };
+    await updateCollection({ id: collectionId, collection: updatedCollection } );
+    setSuccess("Album added to the collection successfully");
+} catch (err) {
+    setError(err.message);
+} finally {
+    setIsLoading(false);
+}
+  };
 
         
     return (
@@ -87,22 +90,20 @@ export const AlbumsCards = () => {
                             ))}
                       </Box>
                       <Box  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                          <Button variant="contained" size='small'>
-                            <a href={`${urlDiscogs}${album.uri}`}target="_blank" rel="noreferrer">view on Discogs</a>
-                          </Button>
-                          <Button
-                            size='small'
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleModal(album)}
-                        >
-                            View Details
-                        </Button>
-                          <br/> 
+                            <Button
+                              size='small'
+                              variant="contained"
+                              color="primary"
+                              href={`${urlDiscogs}/release/${album.id}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              Discogs
+                            </Button>
                             <Select
+                              labelId="collection-native-label"
                               native
                               value={selectedCollection}
-                              onChange={handleSelect}
                               inputProps={{
                                 name: 'collection',
                                 id: 'collection-native-simple',
@@ -117,14 +118,10 @@ export const AlbumsCards = () => {
                               size='small'
                               variant="contained"
                               color="primary"
-                              onClick={() => handleAddToCollection(album)}
+                              onClick={() => handleAddToCollection(album , selectedCollection)}
                           >
                               Add to Collection
                           </Button>
-                          <br/>
-                          <br/>
-                          <Button  variant="contained"  size='small' color="error" >Edit</Button>
-                          <Button variant="contained"  size='small' >Delete</Button> 
                       </Box>
                 </Card>
               ))}
@@ -133,6 +130,7 @@ export const AlbumsCards = () => {
     </>
     );
 };
+
 
 export default AlbumsCards;
 

@@ -1,5 +1,5 @@
 import { createEntityAdapter} from '@reduxjs/toolkit';
-import { apiSlice } from '../ApiSlice'
+import { apiSlice } from "../ApiSlice"
 
 const collectionAdapter = createEntityAdapter(
     {
@@ -8,22 +8,21 @@ const collectionAdapter = createEntityAdapter(
     }
 );
 
-const initialState = collectionAdapter.getInitialState(
-    {
-        status: 'idle',
-        error: null,
-    }
-);
+export const collectionSelectors = collectionAdapter.getSelectors(state => state.collection)
 
-const collectionApiSlice = apiSlice.injectEndpoints({
+
+export const collectionApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
 
     getAllCollections: builder.query({
         query: () => '/collections',
-        providesTags: [{ type: 'Collections', id: "LIST" }]
+        providesTags: (result, error, arg) => [
+            { type: 'Collections', id: "LIST" }
+        ]
     }),
 
-    getCollection: builder.query({
+    
+    getCollectionById: builder.query({
         query: id => `/collections/${id}`,
         providesTags: (result, error, arg) => [
             { type: 'Collections', id: arg.id }
@@ -34,35 +33,33 @@ const collectionApiSlice = apiSlice.injectEndpoints({
         query: initialCollection => ({
             url: '/collections',
             method: 'POST',
-            body: {
-                ...initialCollection 
-            }
+            body: {...initialCollection }
         }),
-        invalidatesTags: [
+        invalidatesTags: (results) => { console.log(results) 
+            return[
             { type: 'Collections', id: "LIST" }
-        ]
+        ]},
     }),
 
     updateCollection: builder.mutation({
-        query: initialCollection => ({
-            url: '/collections',
+        query: (id, initialCollection) => ({
+            url: `/collections/${id}`,
             method: 'PATCH',
-            body: {
-                ...initialCollection,
-            }
+            body: {...initialCollection, id: id}
         }),
-        invalidatesTags: (result, error, arg) => [
-            { type: 'Collections', id: arg.id }
+        invalidatesTags: (result) => [
+            { type: 'Collections', id: result.data.id }
         ]
     }),
+    
 
     deleteCollection: builder.mutation({
         query: id => ({
             url: `/collections/${id}`,
             method: 'DELETE',
         }),
-        invalidatesTags: (result, error, arg) => [
-            { type: 'Collections', id: arg.id }
+        invalidatesTags: (result) => [
+            { type: 'Collections', id: result.data.id }
         ]
     }),
 })
@@ -70,7 +67,7 @@ const collectionApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetAllCollectionsQuery,
-    useGetCollectionQuery,
+    useGetCollectionByIdQuery,
     useAddCollectionMutation,
     useUpdateCollectionMutation,
     useDeleteCollectionMutation,

@@ -17,7 +17,6 @@ import LogOut from '../features/auth/LogOut';
 
 const Nav = () => {
   const dispatch = useDispatch();
-  const mode = useSelector((state) => state.theme.mode);
   const user = useSelector((state) => state.auth.userId);
   
   return (
@@ -26,9 +25,6 @@ const Nav = () => {
     <Toolbar variant="dense">
         {user && (
             <Grid container  direction="row" justifyContent='space-evenly' alignItems='center '>
-                    <Button color="inherit" component={NavLink} to="/home">
-                    Home
-                    </Button>
                     <Button color="inherit" component={NavLink} to="/collections">
                     Collections
                     </Button>

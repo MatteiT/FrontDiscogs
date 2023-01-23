@@ -9,20 +9,18 @@ const Collection = () => {
   return (
     <>
       < Stack direction="column" 
-        spacing={2} 
-        alignItems="center" 
         border={1} 
         borderColor="primary.main" 
         borderRadius={2} 
         padding={2} 
         margin={2}
         >
-          <Grid container spacing={2} alignItems="center" justifyContent="center">
+          <Grid container justifyContent="center" alignItems="center" direction={"column"} >
           <h1> Your Collection</h1>
-          <Box sx={{ width: '100%' }} border={1} borderColor="primary.main" borderRadius={2} padding={2} margin={2}>
+          <Box border={1} borderColor="primary.main" borderRadius={2} p={2} m={2}>
               <NewCollectionForm />   
           </Box>
-          <Box sx={{ width: '100%' }} border={1} borderColor="primary.main" borderRadius={2} padding={2} margin={2}>
+          <Box border={1} borderColor="primary.main" borderRadius={2} p={2} m={2}>
               <CollectionList />
           </Box>
           </Grid>
