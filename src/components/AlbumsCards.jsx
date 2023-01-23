@@ -26,29 +26,39 @@ const {albums}  = useSelector((state) => state.app);
   const {userId} = useSelector(state => state.auth);
   const collectionByUser = collections && collections.filter((collection) => collection.userId === userId);
   
-  const handleAddToCollection = async (album, collectionId) => {
-    setIsLoading(true);
-    setError(null);
-    setSuccess(null)
-    try {
-      const collection = collectionByUser.find((collection) => collection._id === collectionId);
-      if (!collection) {
+const handleAddToCollection = async (album, collectionId) => {
+  setIsLoading(true);
+  setError(null);
+  setSuccess(null);
+
+  try {
+    // Find the collection in the list of collections
+    const collection = collectionByUser.find((collection) => collection._id === collectionId);
+    if (!collection) {
       setError("Collection not found");
-      return
+      return;
     }
-      if(collection.wanted.find(item => item.id === album.id)){
+
+    // Check if the album is already in the wanted list of the collection
+    if(collection.wanted.find(item => item.id === album.id)){
       setError("This Album is already in this collection.");
       return;
     }
+
+    // Add the album to the wanted list of the collection
+    let newWanted = collection.wanted ? [...collection.wanted, album] : [album];
     const updatedCollection = { ...collection, wanted: newWanted };
-    await updateCollection({ _id: collectionId, userId, collection: updatedCollection } );
+    
+    // Dispatch an action to update the collection in the state
+    await dispatch(wantedSlice.actions.updateCollection({ id: collectionId, collection: updatedCollection }));
     setSuccess("Album added to the collection successfully");
-    } catch (err) {
+  } catch (err) {
     setError(err.message);
-    } finally {
+  } finally {
     setIsLoading(false);
-    }
-    };
+  }
+};
+
 
   useEffect (() => {
     if (success || error) {
@@ -110,27 +120,24 @@ const {albums}  = useSelector((state) => state.app);
                             Discogs
                           </Button>
                           <Select
-                            labelId="collection-native-label"
-                            native
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
                             value={selectedCollection}
-                            inputProps={{
-                              name: 'collection',
-                              id: 'collection-native-simple',
-                            }}
+                            label="Collection"
+                            onChange={(e) => setSelectedCollection(e.target.value)}
                           >
-                            <option aria-label="None" value="" />
-                            {collections && collections.map((collection) => (
-                              <option key={collection._id} value={collection._id}>{collection.title}</option>
+                            {collectionByUser && collectionByUser.map((collection) => (
+                              <option key={collection._id} value={collection._id}>{collection.name}</option>
                             ))}
                           </Select>
                           <Button
                             size='small'
                             variant="contained"
                             color="primary"
-                            onClick={() => handleAddToCollection(album , selectedCollection)}
-                        >
-                            Add to Collection
-                        </Button>
+                            onClick={() => handleAddToCollection(album, selectedCollection)}
+                          >
+                            Add to collection
+                          </Button>
                     </Box>
               </Card>
             ))}

@@ -18,12 +18,13 @@ const wantedSlice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(wantedControllers.getAllWanteds.fulfilled, (state, action) => {
-                state.push(...action.payload);
+            .addCase('wanted/getAllWanted/fulfilled', (state, action) => {
+                return action.payload;
             })
-            .addCase(wantedControllers.getWantedById.fulfilled, (state, action) => {
-                state.push(action.payload);
-            });
+            . addCase('wanted/getWantedById/fulfilled', (state, action) => {
+                return action.payload;
+            }
+        )
     }
 });
 
