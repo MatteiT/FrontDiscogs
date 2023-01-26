@@ -3,22 +3,20 @@ import { Card, CardMedia, Typography, Box, Chip, Button, Grid } from '@mui/mater
 import { useDispatch, useSelector } from 'react-redux';
 import { setModal } from '../features/app/ModalSlice';
 import ClickModal from './ClickModal';
-import { useGetAllCollectionsQuery,
-      useUpdateCollectionMutation
-  } from '../features/collection/CollectionSlice';
+import { useGetAllCollectionsQuery } from '../features/collection/CollectionSlice';
 import { Select } from '@mui/material';
 import { useEffect } from 'react';
+import { addWanted } from '../features/wanted/WantedSlice';
 
 
 
 export const AlbumsCards = () => {
 const urlDiscogs = 'https://www.discogs.com';
-
 const {albums}  = useSelector((state) => state.app);
   const dispatch = useDispatch();
+
   const handleModal = (album) => dispatch(setModal(album));
   const [isLoading, setIsLoading] = useState(false);
-  const [updateCollection] = useUpdateCollectionMutation();
   const {data: collections} = useGetAllCollectionsQuery();
   const [selectedCollection, setSelectedCollection] = useState('');
   const [success, setSuccess] = useState(null);
@@ -26,38 +24,22 @@ const {albums}  = useSelector((state) => state.app);
   const {userId} = useSelector(state => state.auth);
   const collectionByUser = collections && collections.filter((collection) => collection.userId === userId);
   
-const handleAddToCollection = async (album, collectionId) => {
-  setIsLoading(true);
-  setError(null);
-  setSuccess(null);
 
-  try {
-    // Find the collection in the list of collections
-    const collection = collectionByUser.find((collection) => collection._id === collectionId);
-    if (!collection) {
-      setError("Collection not found");
-      return;
+const handleAddToWanted = async (album) => {
+    setIsLoading(true);
+    try {
+      const wanted = {
+        user: userId,
+        album: album
+      }
+      await dispatch(addWanted(wanted));
+      setSuccess('Album added successfully');
+    } catch (err) {
+      setError(err.message);
     }
-
-    // Check if the album is already in the wanted list of the collection
-    if(collection.wanted.find(item => item.id === album.id)){
-      setError("This Album is already in this collection.");
-      return;
-    }
-
-    // Add the album to the wanted list of the collection
-    let newWanted = collection.wanted ? [...collection.wanted, album] : [album];
-    const updatedCollection = { ...collection, wanted: newWanted };
-    
-    // Dispatch an action to update the collection in the state
-    await dispatch(wantedSlice.actions.updateCollection({ id: collectionId, collection: updatedCollection }));
-    setSuccess("Album added to the collection successfully");
-  } catch (err) {
-    setError(err.message);
-  } finally {
     setIsLoading(false);
   }
-};
+
 
 
   useEffect (() => {
@@ -134,7 +116,7 @@ const handleAddToCollection = async (album, collectionId) => {
                             size='small'
                             variant="contained"
                             color="primary"
-                            onClick={() => handleAddToCollection(album, selectedCollection)}
+                            onClick={() => handleAddToWanted(album, selectedCollection)}
                           >
                             Add to collection
                           </Button>

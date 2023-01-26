@@ -1,7 +1,5 @@
 import React from 'react'
-import Login from '../features/auth/Login'
-import Register from '../features/auth/Register'
-import { Box, Button, TextField, Stack, Alert } from '@mui/material'
+import { Box, Button, Stack} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
 

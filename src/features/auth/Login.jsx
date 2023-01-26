@@ -86,7 +86,6 @@ const Login = () => {
                     >
                         Login
                     </Button>
-                    <Button variant="contained" color='warning' onClick={() => navigate('/register')}>Register Instead</Button>
                 </Stack> 
             </form>
         </Grid>

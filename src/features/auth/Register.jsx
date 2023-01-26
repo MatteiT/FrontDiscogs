@@ -76,7 +76,6 @@ return (
                         onChange={e => setEmail(e.target.value)}
                     />
                 <Button variant="contained" type="submit">Register</Button>
-                <Button variant="contained" color='warning'  onClick={() => navigate('/login')}>Login Instead</Button>
             </Stack>
     </form>
   )

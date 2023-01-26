@@ -27,18 +27,13 @@ const NewCollectionForm = () => {
           title,
           text: e.target.collectionDescription.value
       }
-      const {data} = await addCollection( collection)
-    if (data.status === 200) {
-        setMessage('Collection added successfully')
-        navigate('/collections')
-      } else {
-        setError(data.message)
-      }
+      await addCollection( collection)
+      setMessage('Collection added successfully')
+      navigate('/collections')
     } catch (err) {
-      setError('Error adding collection')
-    } finally {
-      setIsLoading(false)
+      setError(err.message)
     }
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -71,11 +66,8 @@ const NewCollectionForm = () => {
             fullWidth
             margin="normal"
           />
-          {(message || error) && (
-            <Alert severity={message ? "success" : "error"}>
-              {message || error}
-            </Alert>
-          )}
+          {message && <Alert severity="success">{message}</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
           <Button
             variant="contained"
             type="submit"

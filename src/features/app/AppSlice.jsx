@@ -25,8 +25,6 @@ function filterAlbums(albums, selectedTab) {
     return albums.filter(filterFunctions[selectedTab]);
 }
 
-
-
 const appSlice = createSlice({
     name: 'app',
     initialState: {

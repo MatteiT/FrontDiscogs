@@ -24,34 +24,35 @@ export default function App() {
 
 
   return (
-<ThemeProvider theme={theme}>
-  <CssBaseline />
-    <Router>
-      {/* Header */}
-      <Banner />
-      <Nav />
-        <Routes>
-          {/* Public Route */}
-            < Route path="/" >
-              <Route index path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-            </Route>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        {/* Header */}
+        <Banner />
+        <Nav />
+          <Switch>
+            {/* Public Route */}
+              < Route exact path="/" >
+                <Home />
+              </Route>
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
             {/* Private Route */}
-            <Route path="/search" element={<IsAuth><Search /></IsAuth>} />
-            
-            <Route path="/collections">
-              <Route index element={<IsAuth><CollectionPage /></IsAuth>} />
-              <Route path=":id" element={<IsAuth><InsideCollection /></IsAuth>} />
-              <Route path="new" element={<IsAuth><NewCollectionForm /></IsAuth>} />
-            </Route>
-
+            <IsAuth>
+              <Route path="/search" component={Search} />
+              <Route path="/collections">
+                <Route exact path="/" component={CollectionPage} />
+                <Route path=":id" component={InsideCollection} />
+                <Route path="new" component={NewCollectionForm} />
+              </Route>
+            </IsAuth>
             {/* Utils Route  */}
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<Error />} />
-        </Routes>
-      </Router>
-</ThemeProvider>
+            <Route path="/about" component={About} />
+            <Route path="/error" component={Error} />
+            <Route component={Error} />
+          </Switch>
+        </Router>
+    </ThemeProvider>
   );
 }
 

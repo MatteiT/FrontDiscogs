@@ -35,23 +35,22 @@ export const collectionApiSlice = apiSlice.injectEndpoints({
             method: 'POST',
             body: {...initialCollection }
         }),
-        invalidatesTags: (results) => { console.log(results) 
-            return[
+        invalidatesTags: (result) => [
             { type: 'Collections', id: "LIST" }
-        ]},
+        ]
     }),
 
     updateCollection: builder.mutation({
-        query: (id, initialCollection) => ({
-            url: `/collections/${id}`,
-            method: 'PATCH',
-            body: {...initialCollection, id: id}
+            query: ({id, title, text}) => ({
+                url: `/collections/${id}`,
+                method: 'PATCH',
+                body: {title, text}
+            }),
+            invalidatesTags: (result) => [
+                { type: 'Collections', id: result.data.id }
+            ]
         }),
-        invalidatesTags: (result) => [
-            { type: 'Collections', id: result.data.id }
-        ]
-    }),
-    
+
 
     deleteCollection: builder.mutation({
         query: id => ({
