@@ -1,39 +1,50 @@
-import React from 'react'
-import { Box, Button, Stack} from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
+import Login from '../features/auth/Login'
+import Register from '../features/auth/Register'
+import { Box, Button, Stack } from '@mui/material'
+import { useTransition, animated } from '@react-spring/web'
+import styles from '../styles/app.css'
 
+const FormTransition = ({ showForm }) => {
+  const transition = useTransition(showForm === 'login', {
+    from: { opacity: 0, transform: 'translate3d(0, -40px, 0)' },
+    enter: { opacity: 1, transform: 'translate3d(0, 0px, 0)' },
+    leave: { opacity: 0, transform: 'translate3d(0, -40px, 0)' },
+    
+  })
+  
+  return transition((style, item) =>
+    item ? (
+      <animated.div style={style}>
+        <Login />
+      </animated.div>
+    ) : (
+      <animated.div style={style}>
+        <Register />
+      </animated.div>
+    )
+  )
+}
 
 const Home = () => {
-  const navigate = useNavigate()
+  const [showForm, setShowForm] = useState('login')
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        width: '100%',
-        flexDirection: 'column',
-      }}
-    >
-
-      <Stack spacing={2} direction="row">
-        <Button
-          variant="contained"
-          onClick={() => navigate('/login')}
-        >
+    <Stack spacing={2} direction="column" alignItems="center" justifyContent="center" >
+    <Box className={styles.container}>
+      <h1>Home</h1>
+        <Button variant="contained" onClick={() => setShowForm('login')}>
           Login
         </Button>
-        <Button
-          variant="contained"
-          onClick={() => navigate('/register')}
-        >
+        <Button variant="contained" onClick={() => setShowForm('register')}>
           Register
         </Button>
-      </Stack>
+      <FormTransition showForm={showForm} />
     </Box>
+    </Stack>
+    
   )
 }
 
 export default Home
+
