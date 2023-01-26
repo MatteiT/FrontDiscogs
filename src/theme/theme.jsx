@@ -1,3 +1,4 @@
+import { createTheme } from "@mui/material";
 
 export const colorTokens = {
   grey: {
@@ -29,7 +30,7 @@ export const colorTokens = {
   },
 };
 
-const themeSettings = (mode) => {
+export const themeSettings = (mode) => {
     const backgroundImageDark = 'url(./walpaperDiscogs.png)';
     const backgroundImageLight = 'url(./wallpaperLight.png)';
     const backgroundImage = mode === 'dark' ? backgroundImageDark : backgroundImageLight;
@@ -98,3 +99,5 @@ const themeSettings = (mode) => {
     }; 
 
 }
+
+export const theme = createTheme(themeSettings("dark"));

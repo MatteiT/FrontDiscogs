@@ -12,28 +12,47 @@ const Register = () => {
     const [email, setEmail] = useState('')
     const [errorRegister, setError] = React.useState(null)
     
+
     
     const handleRegister = async (e) => {
         e.preventDefault()
-        try {
-            await addUser({
-                username: e.target.username.value,
-                password: e.target.password.value,
-                email: e.target.email.value
-            })
-            setUsername('')
-            setPassword('')
-            setEmail('')
-            navigate('/login')
-            setError(null)
-        } catch (err) {
-            setError(err.message)
+        if (!username || !password || !email) {
+            setError('All the fields are required !')
+            return
         }
+        if (!password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm)) {
+            setError('Password must contain at least 8 characters, at least one uppercase letter, one lowercase letter and one number')
+            return
+        }
+        if (!username.match(/^[a-zA-Z0-9]+$/gm)) {
+            setError('Username must contain only letters and numbers')
+            return
+        }
+        if (!email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/gm)) {
+            setError('Email is not valid')
+            return
+        }
+        const result = await addUser({ 
+            username: e.target.username.value,
+            password: e.target.password.value,
+            email: e.target.email.value
+        })
+        if (result.error) {
+            setError(result.error.message)
+            return
+        }
+        navigate('/login')
     }
 
-    if (isLoading) return 'Loading...'
+
+if (isLoading) return <div>Loading...</div>
+
 
 return (
+    <>
+    {errorRegister ? <Alert severity="error">{errorRegister}</Alert> : null }
+    { error ? <Alert severity="error">{error.message}</Alert> : null }
+    { isLoading ? <Alert severity="info">Loading...</Alert> : null }
     <form onSubmit={handleRegister}>
         <Stack  
             spacing={3}
@@ -78,6 +97,7 @@ return (
                 <Button variant="contained" type="submit">Register</Button>
             </Stack>
     </form>
+    </>
   )
 }
 

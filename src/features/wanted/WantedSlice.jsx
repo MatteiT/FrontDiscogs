@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const createWanted = createAsyncThunk('wanted/createWanted', async (wanted, {rejectWithValue}) => {
     try {
@@ -140,6 +140,9 @@ export const wantedSlice = createSlice({
 
 export const { setWanted } = wantedSlice.actions;
 
-export const { selectAll: selectAllWanteds, selectById: selectWantedById } = wantedAdapter.getSelectors(state => state.wanteds);
+export const selectAllWanteds = (state) => state.wanted.wanteds;
+export const selectWantedById = (state) => state.wanted.wanted;
+export const selectWantedStatus = (state) => state.wanted.status;
+export const selectWantedError = (state) => state.wanted.error;
 
 export default wantedSlice.reducer;

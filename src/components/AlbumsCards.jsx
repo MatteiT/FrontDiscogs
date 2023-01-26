@@ -6,12 +6,13 @@ import ClickModal from './ClickModal';
 import { useGetAllCollectionsQuery } from '../features/collection/CollectionSlice';
 import { Select } from '@mui/material';
 import { useEffect } from 'react';
-import { addWanted } from '../features/wanted/WantedSlice';
+import  addWanted  from '../features/wanted/WantedSlice';
 
 
 
 export const AlbumsCards = () => {
 const urlDiscogs = 'https://www.discogs.com';
+
 const {albums}  = useSelector((state) => state.app);
   const dispatch = useDispatch();
 
