@@ -31,12 +31,17 @@ const Home = () => {
 
   return (
     <Stack spacing={2} direction="column" alignItems="center" justifyContent="center" >
-    <Box className={styles.container}>
+    <Box className={styles.container} >
       <h1>Home</h1>
-        <Button variant="contained" onClick={() => setShowForm('login')}>
+        <Button variant="contained" 
+        onClick={() => setShowForm('login')} 
+        className={styles.button}
+        >
           Login
         </Button>
-        <Button variant="contained" onClick={() => setShowForm('register')}>
+        <Button variant="contained" 
+        onClick={() => setShowForm('register')} 
+        className={styles.button}>
           Register
         </Button>
       <FormTransition showForm={showForm} />

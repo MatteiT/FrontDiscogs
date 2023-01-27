@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState, useRef } from 'react'
 import { Button, TextField, Grid, Alert, Stack} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +17,15 @@ const Login = () => {
     const dispatch = useDispatch()
     const inputRef = useRef()
 
+    useEffect(() => {
+        if (error) {    
+            const timeout = setTimeout(() => {
+                setError(null)
+            }, 5000)
+            return () => clearTimeout(timeout)
+        }
+    }, [error])
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         const user = {
@@ -25,9 +34,12 @@ const Login = () => {
             email: e.target.email.value
         }
         try {
-            const {data} = await login(user)
-            dispatch(setCredentials(data.accessToken))
-            dispatch(setUserId(data.id))
+            const response = await login(user)
+            if (response.error) {
+                throw new Error(response.error.data.message)
+            }
+            dispatch(setCredentials(response.data.accessToken))
+            dispatch(setUserId(response.data.id))
             navigate('/collections')
         } catch (err) {
             setError(err.message)
@@ -35,12 +47,11 @@ const Login = () => {
         setEmail('')
         setPassword('')
         setUsername('')
-    } 
-
+    }
+    
     return (
         <Grid container justifyContent="center" alignItems="center">
             <form onSubmit={handleSubmit}>
-                { error ? <Alert severity="error">{error}</Alert> : null }
                 <Stack  
                     spacing={3}
                     direction="column" 
@@ -49,6 +60,7 @@ const Login = () => {
                     p={2} 
                     m={2}>
                     <h1>Login</h1>
+                        { error ? <Alert severity="error">{error}</Alert> : null }
                     <TextField
                         id="outlined-basic"
                         label="Username"

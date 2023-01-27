@@ -36,6 +36,9 @@ const CollectionList = ( ) => {
     const handleConfirmDelete = async () => {
         try {
             await deleteCollection( collectionToDelete._id );
+            if (data.error) {
+                throw new Error(data.error.data.message)
+            }
             setSuccessMessage('Collection deleted successfully')
             setCollectionToDelete(null)
             refetch()
@@ -55,7 +58,13 @@ const CollectionList = ( ) => {
     // Update collection modal handlers
 const handleConfirmUpdate = async () => {
     try {
-        await updateCollection({id: collectionToUpdate._id, title: updatedTitle, text: updatedText});
+        if (!updatedTitle || !updatedText) {
+            throw new Error('Please fill all fields')
+        }
+        const response = await updateCollection({id: collectionToUpdate._id, title: updatedTitle, text: updatedText});
+        if (response.error) {
+            throw new Error(response.error.data.message)
+        }
         setSuccessMessage('Collection updated successfully')
         setCollectionToUpdate(null)
         refetch()
@@ -132,6 +141,7 @@ return (
                 <TextField 
                     label="Title" 
                     variant="outlined" 
+                    required 
                     value={updatedTitle}
                     onChange={(e) => setUpdatedTitle(e.target.value)}
                 />

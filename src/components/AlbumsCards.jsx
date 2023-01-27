@@ -41,8 +41,6 @@ const handleAddToWanted = async (album) => {
     setIsLoading(false);
   }
 
-
-
   useEffect (() => {
     if (success || error) {
       setTimeout(() => {
@@ -51,6 +49,7 @@ const handleAddToWanted = async (album) => {
       }, 3000);
     }
   }, [success, error]);
+
 
       
   return (

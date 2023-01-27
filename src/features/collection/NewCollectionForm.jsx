@@ -27,7 +27,10 @@ const NewCollectionForm = () => {
           title,
           text: e.target.collectionDescription.value
       }
-      await addCollection( collection)
+      const response = await addCollection( collection)
+      if (response.error) {
+        throw new Error(response.error.data.message)
+    }
       setMessage('Collection added successfully')
       navigate('/collections')
     } catch (err) {

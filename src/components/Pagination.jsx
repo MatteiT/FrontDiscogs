@@ -1,18 +1,21 @@
 import React from 'react';
 import {Box, Button} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { setPage } from '../features/app/appSlice';
 
 const Pagination = () => {
 const { page } = useSelector((state) => state.app);
 const dispatch = useDispatch();
 
 const handleNext = () => {
-  dispatch({ type: 'app/setPage', payload: page + 1 });
+  dispatch(setPage(page + 1));
 };
 
 const handlePrev = () => {
-  dispatch({ type: 'app/setPage', payload: page - 1 });
+  dispatch(setPage(page > 1 ? page - 1 : 1));
 };
+
+console.log(page);
 
 
 return (

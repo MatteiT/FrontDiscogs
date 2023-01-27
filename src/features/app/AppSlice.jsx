@@ -6,7 +6,7 @@ const API_KEY = 'qALItICfHYUDyaIegejpMxJlRDjVmjxBxfkwgbCi'
 export const fetchAlbums = createAsyncThunk(
     'app/fetchAlbums', 
     async (search, page) => {
-    try{
+            try{
     const response = await axios.get(`https://api.discogs.com/database/search?q=${search}&token=${API_KEY}&page=${page}`)
     return response.data.results
     } catch (error) {

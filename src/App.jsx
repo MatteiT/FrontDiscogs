@@ -8,7 +8,7 @@ import About from './utils/About';
 import Error from './utils/Error';
 import Register from './features/auth/Register';
 import CollectionPage from './components/CollectionPage';
-import { CssBaseline, Switch, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
@@ -17,6 +17,7 @@ import Login from './features/auth/Login';
 import NewCollectionForm from './features/collection/NewCollectionForm';
 import InsideCollection from './features/collection/InsideCollection';
 import IsAuth from './features/auth/IsAuth';
+import Footer from './utils/Footer';
 
 export default function App() {
   const mode = useSelector((state) => state.theme.mode);
@@ -24,7 +25,7 @@ export default function App() {
 
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} >
       <CssBaseline />
         <Router>
           {/* Header */}
@@ -49,6 +50,7 @@ export default function App() {
                 <Route path="*" element={<Error />} />
             </Routes>
           </Router>
+          <Footer />
     </ThemeProvider>
       );
     }

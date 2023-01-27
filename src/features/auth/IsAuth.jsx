@@ -8,15 +8,17 @@ const IsAuth = ({ children }) => {
     if (!token) {
         return (
             <Box 
-            align="center" 
-            justifyContent={"center"}
-            justifySelf={"center"} 
-            alignSelf={"center"} 
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
             margin={2} 
             padding={2} 
             border={1} 
             borderColor="primary.warning" 
-            borderRadius={2} >
+            borderRadius={2} 
+            boxShadow={2}
+            height="60vh"
+            >
                 <Alert 
                 severity="error"
                 variant="filled">
